@@ -1,1 +1,1 @@
-// Add all scripts to the JS folder
+// JS code by Morgan, 2024
