@@ -33,30 +33,38 @@ function cities(){
     superior.city = 'Superior';
     superior.population = 27244;
     cityPop.push(superior);
-
-    var table = document.createElement("table");
     
-    //WHILE LOOP...Example 2.4 line 25
-    //define a counter variable
-    var i = 0;
-       
-    //start the loop
-    while (i < cityPop.length){
+    var table = document.createElement("table");
+
+    //Example 2.4 line 25...loop to add a new row for each city
+    for (var i = 0; i < cityPop.length; i++){
         var tr = document.createElement("tr");
-
+    
         var city = document.createElement("td");
-        city.innerHTML = cityPop[i].city;
-        tr.appendChild(city);
-
-        var pop = document.createElement("td");
-        pop.innerHTML = cityPop[i].population;
-        tr.appendChild(pop);
-
-        table.appendChild(tr);
-
-        //increment counter
-        i++;
-    };
+        //first conditional block
+            if (cityPop[i].city == 'Madison'){
+                city.innerHTML = 'Badgerville';
+            } else if (cityPop[i].city == 'Green Bay'){
+                city.innerHTML = 'Packerville';
+            } else {
+                city.innerHTML = cityPop[i].city;
+            }
+    
+            tr.appendChild(city);
+    
+            var pop = document.createElement("td");
+        //second conditional block        
+            if (cityPop[i].population < 500000){
+                pop.innerHTML = cityPop[i].population;
+            } else {
+                pop.innerHTML = 'Too big!';
+            };
+    
+            tr.appendChild(pop);
+    
+            table.appendChild(tr);
+        };
+ 
     //add the table to the div in index.html
     var myDiv =  document.getElementById("mydiv");
     myDiv.appendChild(table);
