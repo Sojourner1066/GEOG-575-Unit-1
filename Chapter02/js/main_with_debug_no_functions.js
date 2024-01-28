@@ -28,15 +28,7 @@ function initialize(){
 	superior.population = 27244;
 	cityPop.push(superior);
 
-	cityTable = makeTable();
-	cityTable = addColumns(cityTable, cityPop);
-
-	//add the table to the div in index.html
-	var myDiv =  document.getElementById("mydiv");
-	myDiv.appendChild(cityTable);
-};
-function makeTable(cityPop){
-    var table = document.createElement("table");
+	var table = document.createElement("table");
 
     //FOREACH LOOP WITH OBJECT FOR LOOP...Example 2.4 line 25
     cityPop.forEach(function(cityPop){
@@ -50,10 +42,42 @@ function makeTable(cityPop){
 
         table.appendChild(tr);
     });
-	return table
+	
+	table.querySelectorAll("tr").forEach(function(row, i){
+		if (i == 0){
+			console.log('got to here')
+			//row.insertAdjacntHTML('beforeend', '<th>City Size</th>');
+		} else {
+
+			var citySize;
+
+			if (cityPop[i-1].population < 100000){
+				citySize = 'Small';
+
+			} else if (cityPop[i-1].population < 500000){
+				citysize = 'Medium';
+
+			} else {
+				citySize = 'Large';
+			};
+			
+			var tr = document.createElement("tr");
+			var td = document.createElement("td");
+			td.innerHTML = citySize;
+			tr.appendChild(td);
+			table.appendChild(tr);
+
+			//row.insertAdjacntHTML = '<td>' + citySize + '</td>'; 
+		}; 
+	});
+
+	//add the table to the div in index.html
+	var myDiv =  document.getElementById("mydiv");
+	myDiv.appendChild(table);
 };
 
 
+/* 
 function addColumns(cityTable, cityPop){
 	cityTable.querySelectorAll("tr").forEach(function(row, i){
 		if (i == 0){
@@ -78,7 +102,7 @@ function addColumns(cityTable, cityPop){
 
 	return cityTable
 };
-	
+	 */
 	/* 
 	cityTable.querySelectorAll("tr").forEach(function(row, i){
 		if (i == 0){
