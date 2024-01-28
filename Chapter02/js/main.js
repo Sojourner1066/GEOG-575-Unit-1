@@ -64,8 +64,10 @@ function cities(){
     };
 
     //add the table to the div in index.html
-    var myDiv =  document.querySelector("#mydiv");
-    myDiv.appendChild(table);
+//    var myDiv =  document.querySelector("#mydiv");
+//    myDiv.appendChild(table);
+    document.querySelector("#mydiv").appendChild(table)
+
 };
 
 window.onload = initialize();
