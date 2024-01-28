@@ -65,11 +65,11 @@ function cities(){
     
     //Added below Example 3.8...
     //click listener with anonymous handler function
-    document.querySelector("table").addEventListener("click", function(){
+    /* document.querySelector("table").addEventListener("click", function(){
         alert('Madison Rocks! Go Badgers!');
-    });
+    }); */
 
-/*
+
     //named handler function for removable listener
     function clickme(){
         alert('Yeah Green Bay! Go Packers!');
@@ -80,8 +80,18 @@ function cities(){
 
     //remove the event listener
     document.querySelector("table").removeEventListener('click', clickme);
-*/
 
+    //Added below Example 3.6...
+    //change the text color
+    document.querySelector('#mydiv').style.color = 'red';
+
+    //change the text size and alignment
+    document.querySelector('#mydiv').style.fontSize = '2em';
+    document.querySelector('#mydiv').style.textAlign = 'center';
+
+    //get the text color and add it as text to the div
+    var thecolor = document.querySelector('#mydiv').style.color;
+    document.querySelector('#mydiv').insertAdjacentHTML('beforeend',thecolor);
 };
 
 
