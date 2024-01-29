@@ -29,6 +29,15 @@ function initialize(){
 	cityPop.push(superior);
 
 	var table = document.createElement("table");
+	//create a header row
+    var headerRow = document.createElement("tr");
+
+    //add the "City" and "Population" columns to the header row
+    headerRow.insertAdjacentHTML("beforeend","<th>City</th><th>Population</th>")
+
+    //add the row to the table
+    table.appendChild(headerRow);
+
 
     //FOREACH LOOP WITH OBJECT FOR LOOP...Example 2.4 line 25
     cityPop.forEach(function(cityPop){
@@ -45,8 +54,10 @@ function initialize(){
 	
 	table.querySelectorAll("tr").forEach(function(row, i){
 		if (i == 0){
-			console.log('got to here')
-			//row.insertAdjacntHTML('beforeend', '<th>City Size</th>');
+			console.log(row)
+			var th = document.createElement("th");
+			th.innerHTML = 'City Size';
+			row.appendChild(th);
 		} else {
 
 			var citySize;
@@ -55,17 +66,16 @@ function initialize(){
 				citySize = 'Small';
 
 			} else if (cityPop[i-1].population < 500000){
-				citysize = 'Medium';
+				citySize = 'Medium';
 
 			} else {
 				citySize = 'Large';
 			};
-			
-			var tr = document.createElement("tr");
+	
 			var td = document.createElement("td");
 			td.innerHTML = citySize;
-			tr.appendChild(td);
-			table.appendChild(tr);
+			row.appendChild(td);
+			table.appendChild(row);
 
 			//row.insertAdjacntHTML = '<td>' + citySize + '</td>'; 
 		}; 
