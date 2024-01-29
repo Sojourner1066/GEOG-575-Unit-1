@@ -76,70 +76,18 @@ function initialize(){
 			td.innerHTML = citySize;
 			row.appendChild(td);
 			table.appendChild(row);
-
-			//row.insertAdjacntHTML = '<td>' + citySize + '</td>'; 
 		}; 
 	});
 
 	//add the table to the div in index.html
 	var myDiv =  document.getElementById("mydiv");
 	myDiv.appendChild(table);
+
+	addEvents()
 };
 
 
-/* 
-function addColumns(cityTable, cityPop){
-	cityTable.querySelectorAll("tr").forEach(function(row, i){
-		if (i == 0){
-			console.log(row)
-		} else {
-
-			var citySize;
-
-			if (cityPop[i-1].population < 100000){
-				citySize = 'Small';
-
-			} else if (cityPop[i-1].population < 500000){
-				citysize = 'Medium';
-
-			} else {
-				citySize = 'Large';
-			};
-
-			row.insertAdjacntHTML = '<td>' + citySize + '</td>'; 
-		}; 
-	});
-
-	return cityTable
-};
-	 */
-	/* 
-	cityTable.querySelectorAll("tr").forEach(function(row, i){
-		if (i == 0){
-			console.log('got to here')
-			row.insertAdjacntHTML('beforeend', '<th>City Size</th>');
-		} else {
-
-			var citySize;
-
-			if (cityPop[i-1].population < 100000){
-				citySize = 'Small';
-
-			} else if (cityPop[i-1].population < 500000){
-				citysize = 'Medium';
-
-			} else {
-				citySize = 'Large';
-			};
-
-			row.insertAdjacntHTML = '<td>' + citySize + '</td>'; 
-		}; 
-	});
-	return cityTable
-};
-*/
-
-/* function addEvents(){
+function addEvents(){
 
 	document.querySelector("table").addEventListener("mouseover", function(){
 		
@@ -156,6 +104,7 @@ function addColumns(cityTable, cityPop){
 			
 			} else {
 				color += ")";
+			};
 		};
 
 		document.querySelector("table").color = color;
@@ -167,7 +116,7 @@ function addColumns(cityTable, cityPop){
 	};
 
 	document.querySelector("table").addEventListener("click", clickme)
-}; */
+};
 
 
 
