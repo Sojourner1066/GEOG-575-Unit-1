@@ -96,7 +96,9 @@ function initialize(){
 	
 	// This calls the function to add events to the table
 	addEvents();
-
+	
+	// Calls the function to display the geojson file in the data folder
+	// on the html page. 
     jsAjax()
 };
 
@@ -138,11 +140,10 @@ function addEvents(){
 	// selects the table and adds a click event listener 
 	document.querySelector("table").addEventListener("click", clickme)
 };
-    //Example 2.7 line 1
+// Function to fetch geojson from the data folder and pass to callback function
 function jsAjax(){
 	//use Fetch to retrieve data
 	fetch('data/MegaCities.geojson')
-	//fetch('http://localhost:8080/Chapter02/data/MegaCities.geojson')
 		.then(function(response){
 			return response.json();
 		}) 
@@ -151,9 +152,9 @@ function jsAjax(){
 
 //define callback function
 function callback(response){
-	//tasks using the data go here
-	//console.log(response)
+	//Get the gjdiv element from the html and assign it to gjDiv
 	var gjDiv =  document.getElementById("gjdiv");
+	// Convert the response json into a string and assign it to the gjDiv element
 	gjDiv.innerHTML = JSON.stringify(response);
 };
 
