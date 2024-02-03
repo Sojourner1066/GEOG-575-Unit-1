@@ -79,7 +79,7 @@ function cities(){
     document.querySelector("table").addEventListener('click', clickme);
 
     //remove the event listener
-    document.querySelector("table").removeEventListener('click', clickme);
+    //document.querySelector("table").removeEventListener('click', clickme);
 
     //Added below Example 3.6...
     //change the text color
