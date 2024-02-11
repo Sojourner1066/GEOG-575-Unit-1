@@ -10,9 +10,16 @@ function createMap(){
     });
 
     //add OSM base tilelayer
+    /*
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
     }).addTo(map);
+    */
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 20
+    }).addTo(map);;
 
     //call getData function
     getData();
@@ -35,19 +42,20 @@ function onEachFeature(feature, layer) {
 //function to retrieve the data and place it on the map
 function getData(){
     //load the data
-    fetch("data/MegaCities.geojson")
+    fetch("data/WB_electricity_access.geojson")
+    // https://energydata.info/dataset/world-global-tracking-framework-2017/resource/af43491b-d8f3-4c24-adf6-259946b241ec?inner_span=True
         .then(function(response){
             return response.json();
         })
         .then(function(json){            
             //create marker options
             var geojsonMarkerOptions = {
-                radius: 8,
-                fillColor: "#ff7800",
+                radius: 3,
+                fillColor: "#5b16b5",
                 color: "#000",
                 weight: 1,
-                opacity: 1,
-                fillOpacity: 0.8
+                opacity: 0.8,
+                fillOpacity: 0.6
             };
             //create a Leaflet GeoJSON layer and add it to the map
             L.geoJson(json, {
