@@ -18,6 +18,20 @@ function createMap(){
     getData();
 };
 
+
+function onEachFeature(feature, layer) {
+    //no property named popupContent; instead, create html string with all properties
+    var popupContent = "";
+    if (feature.properties) {
+        //loop to add feature property names and values to html string
+        for (var property in feature.properties){
+            popupContent += "<p>" + property + ": " + feature.properties[property] + "</p>";
+        }
+        layer.bindPopup(popupContent);
+    };
+};
+
+
 //function to retrieve the data and place it on the map
 function getData(){
     //load the data
@@ -37,17 +51,10 @@ function getData(){
             };
             //create a Leaflet GeoJSON layer and add it to the map
             L.geoJson(json, {
+                onEachFeature: onEachFeature,
                 pointToLayer: function (feature, latlng){
                     return L.circleMarker(latlng, geojsonMarkerOptions);
-                }
-            }).addTo(map);
-        });
-        /*.then(function(json){
-            //create a Leaflet GeoJSON layer and add it to the map
-            L.geoJson(json).addTo(map);
-        }) 
-
-        */
+                    }}).addTo(map);  
+        })  
 };
-
 document.addEventListener('DOMContentLoaded',createMap)
