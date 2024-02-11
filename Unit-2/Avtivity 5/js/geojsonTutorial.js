@@ -1,12 +1,15 @@
-// Add all scripts to the JS folder
-
+// Create a variable and initialize the map pointing to the 'map' div 
+// then set the center point and the zoom level for the map.
 var map = L.map('map').setView([40.0, -100.0], 4);
 
+// Initialize the tile layer using the openstreetmap url
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
+// Create a geojson object with two polygons and the prperties for 
+// political party
 var states = [{
     "type": "Feature",
     "properties": {"party": "Republican"},
@@ -35,6 +38,8 @@ var states = [{
     }
 }];
 
+// initialize the GeoJson layer and loads the states object created above
+// then tests the two cases and returns different colors for the political parties
 L.geoJSON(states, {
     style: function(feature) {
         switch (feature.properties.party) {
@@ -44,6 +49,7 @@ L.geoJSON(states, {
     }
 }).addTo(map);
 
+// creates an array with a json object storing a linestring
 var myLines = [{
     "type": "LineString",
     "coordinates": [[-100, 40], [-105, 45], [-110, 55]]
@@ -52,12 +58,14 @@ var myLines = [{
     "coordinates": [[-105, 40], [-110, 45], [-115, 55]]
 }];
 
+// style description for the line strings
 var myStyle = {
     "color": "#ff7800",
     "weight": 5,
     "opacity": 0.65
 };
 
+// creates a layer on the map with the geojson line strings added and styled. 
 L.geoJSON(myLines, {
     style: myStyle
 }).addTo(map);
@@ -79,6 +87,7 @@ L.geoJSON(someGeojsonFeature, {
 }).addTo(map);
 */
 
+// Function to loop over the features in a layer and add the properties to the popup
 function onEachFeature(feature, layer) {
     // does this feature have a property named popupContent?
     if (feature.properties && feature.properties.popupContent) {
@@ -86,6 +95,7 @@ function onEachFeature(feature, layer) {
     }
 }
 
+// single geojson feature with one point
 var geojsonFeature = {
     "type": "Feature",
     "properties": {
@@ -99,6 +109,7 @@ var geojsonFeature = {
     }
 };
 
+// creates a layer on the map and calls the oneachfeature function to add popup content
 L.geoJSON(geojsonFeature, {
     onEachFeature: onEachFeature
 }).addTo(map);
