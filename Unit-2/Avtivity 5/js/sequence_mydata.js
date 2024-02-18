@@ -54,14 +54,15 @@ function calcPropRadius(attValue) {
     //var radius = 1.0083 * Math.pow(attValue/1,0.5715) //* minRadius
 
     // highest attValue = 100 without multiplying by minRadius and minValue is 1 == 14.014892380524241
-    console.log(radius)
+    //console.log(radius)
     return radius;
 };
 
 //function to convert markers to circle markers
-function pointToLayer(feature, latlng){
+function pointToLayer(feature, latlng, attributes){
     //Determine which attribute to visualize with proportional symbols
-    var attribute = "YR1990";
+    var attribute = attributes[0]; //"YR1990";
+    console.log(attribute);
 
     //create marker options
     var options = {
@@ -99,13 +100,65 @@ function pointToLayer(feature, latlng){
     return layer;
 };
 
+//Above Example 3.10...Step 3: build an attributes array from the data
+function processData(data){
+    //empty array to hold attributes
+    var attributes = [];
 
+    //properties of the first feature in the dataset
+    var properties = data.features[0].properties;
+
+    //push each attribute name into attributes array
+    for (var attribute in properties){
+        //only take attributes with population values
+        if (attribute.indexOf("YR") > -1){
+            attributes.push(attribute);
+        };
+    };
+
+    //check result
+    console.log(attributes);
+
+    return attributes;
+};
+
+function createPropSymbols(data, attributes){
+    //create a Leaflet GeoJSON layer and add it to the map
+    L.geoJson(data, {
+        pointToLayer: function(feature, latlng){
+            return pointToLayer(feature, latlng, attributes);
+        }
+    }).addTo(map);
+};
 
 //Step 3: Add circle markers for point features to the map
-function createPropSymbols(data){
+/*function createPropSymbols(data){
     L.geoJson(data, {
         pointToLayer: pointToLayer
     }).addTo(map);
+};
+*/
+
+//Step 1: Create new sequence controls
+function createSequenceControls(){
+    //create range input element (slider)
+    var slider = "<input class='range-slider' type='range'></input>";
+    document.querySelector("#panel").insertAdjacentHTML('beforeend',slider);
+
+     //set slider attributes
+     document.querySelector(".range-slider").max = 24;
+     document.querySelector(".range-slider").min = 0;
+     document.querySelector(".range-slider").value = 0;
+     document.querySelector(".range-slider").step = 1;
+
+    //below Example 3.6...add step buttons
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse</button>');
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward</button>');
+
+    document.querySelector('#reverse').insertAdjacentHTML('beforeend',"<img src='img/noun-arrows-left-712896.svg'>");
+    document.querySelector('#forward').insertAdjacentHTML('beforeend',"<img src='img/noun-arrows-right-712895.svg'>");
+
+    //Arrows Right by Peter Hacke from <a href="https://thenounproject.com/browse/icons/term/arrows-right/" target="_blank" title="Arrows Right Icons">Noun Project</a> (CC BY 3.0)
 };
 
 
@@ -121,7 +174,9 @@ function getData(){
             minValue = calculateMinValue(json);
             //console.log(minValue)
             //call function to create proportional symbols
-            createPropSymbols(json);
+            var attributes = processData(json);
+            createPropSymbols(json, attributes);
+            createSequenceControls();
         })
 };
 
