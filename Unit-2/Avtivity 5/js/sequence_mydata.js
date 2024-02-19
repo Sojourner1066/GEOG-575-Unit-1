@@ -62,7 +62,7 @@ function calcPropRadius(attValue) {
 function pointToLayer(feature, latlng, attributes){
     //Determine which attribute to visualize with proportional symbols
     var attribute = attributes[0]; //"YR1990";
-    console.log(attribute);
+    //console.log(attribute);
 
     //create marker options
     var options = {
@@ -118,7 +118,7 @@ function processData(data){
 
     //check result
     //console.log(attributes);
-
+    //console.log(attributes)
     return attributes;
 };
 
@@ -178,10 +178,9 @@ function createSequenceControls(){
                 index = index < 0 ? 24 : index;
             //Called in both step button and slider event listener handlers
             //Step 9: pass new attribute to update symbols
+            };
             updatePropSymbols(attributes[index]);
             console.log(attributes[index]);
-            };
-
             //Step 8: update slider
             document.querySelector('.range-slider').value = index;
         })
@@ -223,7 +222,7 @@ function updatePropSymbols(attribute){
             layer.setRadius(radius);
 
             //add formatted attribute to panel content string
-            popupContent = "<p><b>Country:</b> " + feature.properties.SOV0NAME + "</p><p><b>" + "Percent of population with access to electricity in " + attribute.slice(2) + ":</b> " + Math.round(feature.properties[attribute] * 100) / 100 + "</p>";
+            popupContent = "<p><b>Country:</b> " + layer.feature.properties.SOV0NAME + "</p><p><b>" + "Percent of population with access to electricity in " + attribute.slice(2) + ":</b> " + Math.round(layer.feature.properties[attribute] * 100) / 100 + "</p>";
 
             //update popup content            
             popup = layer.getPopup();            
@@ -244,7 +243,7 @@ function getData(){
             minValue = calculateMinValue(json);
             //console.log(minValue)
             //call function to create proportional symbols
-            var attributes = processData(json);
+            attributes = processData(json);
             createPropSymbols(json, attributes);
             createSequenceControls();
         })
