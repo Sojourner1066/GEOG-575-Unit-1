@@ -117,7 +117,7 @@ function processData(data){
     };
 
     //check result
-    console.log(attributes);
+    //console.log(attributes);
 
     return attributes;
 };
@@ -159,8 +159,78 @@ function createSequenceControls(){
     document.querySelector('#forward').insertAdjacentHTML('beforeend',"<img src='img/noun-arrows-right-712895.svg'>");
 
     //Arrows Right by Peter Hacke from <a href="https://thenounproject.com/browse/icons/term/arrows-right/" target="_blank" title="Arrows Right Icons">Noun Project</a> (CC BY 3.0)
+
+    //Below Example 3.6 in createSequenceControls()
+    //Step 5: click listener for buttons
+    document.querySelectorAll('.step').forEach(function(step){
+        step.addEventListener("click", function(){
+            //sequence
+            var index = document.querySelector('.range-slider').value;
+
+            //Step 6: increment or decrement depending on button clicked
+            if (step.id == 'forward'){
+                index++;
+                //Step 7: if past the last attribute, wrap around to first attribute
+                index = index > 24 ? 0 : index;
+            } else if (step.id == 'reverse'){
+                index--;
+                //Step 7: if past the first attribute, wrap around to last attribute
+                index = index < 0 ? 24 : index;
+            //Called in both step button and slider event listener handlers
+            //Step 9: pass new attribute to update symbols
+            updatePropSymbols(attributes[index]);
+            console.log(attributes[index]);
+            };
+
+            //Step 8: update slider
+            document.querySelector('.range-slider').value = index;
+        })
+    })
+
+    //Step 5: input listener for slider
+    document.querySelector('.range-slider').addEventListener('input', function(){            
+        //sequence
+        //Step 6: get the new index value
+        var index = this.value;
+        //console.log(index);
+                //Called in both step button and slider event listener handlers
+        //Step 9: pass new attribute to update symbols
+        updatePropSymbols(attributes[index]);
+        console.log(attributes[index]);
+    });
 };
 
+//Step 10: Resize proportional symbols according to new attribute values
+function updatePropSymbols(attribute){
+    map.eachLayer(function(layer){
+        if (layer.feature && layer.feature.properties[attribute]){
+            //update the layer style and popup
+            //access feature properties
+            var props = layer.feature.properties;
+
+            //update each feature's radius based on new attribute values
+            var radius = calcPropRadius(props[attribute]);
+/*            if(radius==0){
+                layer.setRadius(3);
+                layer.set .fillColor = "#7e7e7e";
+            } else {
+                //Step 6: Give each feature's circle marker a radius based on its attribute value
+                options.radius = calcPropRadius(props[attribute]);
+                options.fillColor = "#7900bc";
+            }
+*/
+
+            layer.setRadius(radius);
+
+            //add formatted attribute to panel content string
+            popupContent = "<p><b>Country:</b> " + feature.properties.SOV0NAME + "</p><p><b>" + "Percent of population with access to electricity in " + attribute.slice(2) + ":</b> " + Math.round(feature.properties[attribute] * 100) / 100 + "</p>";
+
+            //update popup content            
+            popup = layer.getPopup();            
+            popup.setContent(popupContent).update();
+        };
+    });
+};
 
 //Step 2: Import GeoJSON data
 function getData(){
