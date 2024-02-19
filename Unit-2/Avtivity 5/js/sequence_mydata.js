@@ -29,7 +29,8 @@ function calculateMinValue(data){
         for(var year = 1990; year <= 2014; year+=1){
               //get population for current year
               var value = city.properties["YR"+ String(year)];
-              //console.log(value)
+              
+              //remove null and 0 from array so the sybmology will work correctly
               if(value != null && value != 0){
                 //console.log(year);
                 //console.log(city.properties["NAME"]);
@@ -51,10 +52,6 @@ function calcPropRadius(attValue) {
     var minRadius = 2;
     //Flannery Apperance Compensation formula
     var radius = 1.0083 * Math.pow(attValue/minValue,0.5715) * minRadius
-    //var radius = 1.0083 * Math.pow(attValue/1,0.5715) //* minRadius
-
-    // highest attValue = 100 without multiplying by minRadius and minValue is 1 == 14.014892380524241
-    //console.log(radius)
     return radius;
 };
 
@@ -140,7 +137,7 @@ function createPropSymbols(data, attributes){
 */
 
 //Step 1: Create new sequence controls
-function createSequenceControls(){
+function createSequenceControls(attributes){
     //create range input element (slider)
     var slider = "<input class='range-slider' type='range'></input>";
     document.querySelector("#panel").insertAdjacentHTML('beforeend',slider);
@@ -180,7 +177,7 @@ function createSequenceControls(){
             //Step 9: pass new attribute to update symbols
             };
             updatePropSymbols(attributes[index]);
-            console.log(attributes[index]);
+            //console.log(attributes[index]);
             //Step 8: update slider
             document.querySelector('.range-slider').value = index;
         })
@@ -195,7 +192,7 @@ function createSequenceControls(){
                 //Called in both step button and slider event listener handlers
         //Step 9: pass new attribute to update symbols
         updatePropSymbols(attributes[index]);
-        console.log(attributes[index]);
+        //console.log(attributes[index]);
     });
 };
 
@@ -209,17 +206,22 @@ function updatePropSymbols(attribute){
 
             //update each feature's radius based on new attribute values
             var radius = calcPropRadius(props[attribute]);
-/*            if(radius==0){
-                layer.setRadius(3);
-                layer.set .fillColor = "#7e7e7e";
-            } else {
-                //Step 6: Give each feature's circle marker a radius based on its attribute value
-                options.radius = calcPropRadius(props[attribute]);
-                options.fillColor = "#7900bc";
-            }
-*/
 
-            layer.setRadius(radius);
+            //if(props[attribute]==0){
+            console.log(props[attribute])
+            //}
+
+            if(radius<3){
+                layer.setRadius(3);
+                layer.setStyle({fillColor : "#7e7e7e"})
+            } else {
+                layer.setRadius(radius);  
+                layer.setStyle({fillColor : "#7900bc"})
+            }
+
+
+            //layer.setRadius(radius);
+            //layer.feature.properties.
 
             //add formatted attribute to panel content string
             popupContent = "<p><b>Country:</b> " + layer.feature.properties.SOV0NAME + "</p><p><b>" + "Percent of population with access to electricity in " + attribute.slice(2) + ":</b> " + Math.round(layer.feature.properties[attribute] * 100) / 100 + "</p>";
@@ -243,9 +245,9 @@ function getData(){
             minValue = calculateMinValue(json);
             //console.log(minValue)
             //call function to create proportional symbols
-            attributes = processData(json);
+            let attributes = processData(json);
             createPropSymbols(json, attributes);
-            createSequenceControls();
+            createSequenceControls(attributes);
         })
 };
 
