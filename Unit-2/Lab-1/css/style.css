@@ -1,8 +1,11 @@
 /*Add CSS styles here*/
 
-#map { height: 400px;
+#map { height: 800px;
         width: 80%;
         display: inline-block;
+        /* border: 3px solid; */
+        /* margin:auto; */
+        /* padding: 10px;       */
         }
 
 #panel {  
@@ -15,11 +18,11 @@
         }  
         
         .range-slider {  
-        width: 55%;  
+        width: 80%;  
         }  
         
         .step {  
-        width: 20%;  
+        width: 50%;  
         }  
         
         .step img {  

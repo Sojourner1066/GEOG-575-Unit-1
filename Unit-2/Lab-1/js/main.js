@@ -78,6 +78,9 @@ function pointToLayer(feature, latlng, attributes){
     if(attValue==0){
         options.radius = 3;
         options.fillColor = "#7e7e7e";
+    } else if(attValue==100){
+        options.radius = 3;
+        options.fillColor = "#25BE3A";
     } else {
         //Step 6: Give each feature's circle marker a radius based on its attribute value
         options.radius = calcPropRadius(attValue);
@@ -97,8 +100,10 @@ function pointToLayer(feature, latlng, attributes){
     return layer;
 };
 
-//Above Example 3.10...Step 3: build an attributes array from the data
 function processData(data){
+    // This function creates an array with all the 'field names'
+    // with data about electricity percentages
+
     //empty array to hold attributes
     var attributes = [];
 
@@ -107,7 +112,7 @@ function processData(data){
 
     //push each attribute name into attributes array
     for (var attribute in properties){
-        //only take attributes with population values
+        //only take attributes with values
         if (attribute.indexOf("YR") > -1){
             attributes.push(attribute);
         };
@@ -204,20 +209,29 @@ function updatePropSymbols(attribute){
             //access feature properties
             var props = layer.feature.properties;
 
+
             //update each feature's radius based on new attribute values
-            var radius = calcPropRadius(props[attribute]);
+            if(props[attribute]==100){
+                layer.setRadius(3);
+                layer.setStyle({fillColor : "#25BE3A"});
+            }else {
+                var radius = calcPropRadius(props[attribute]);
+                layer.setRadius(radius);  
+                layer.setStyle({fillColor : "#7900bc"})
+            }
+            
 
             //if(props[attribute]==0){
             console.log(props[attribute])
             //}
 
-            if(radius<3){
-                layer.setRadius(3);
-                layer.setStyle({fillColor : "#7e7e7e"})
-            } else {
-                layer.setRadius(radius);  
-                layer.setStyle({fillColor : "#7900bc"})
-            }
+            // if(radius<3){
+            //     layer.setRadius(3);
+            //     layer.setStyle({fillColor : "#7e7e7e"})
+            // } else {
+            //     layer.setRadius(radius);  
+            //     layer.setStyle({fillColor : "#7900bc"})
+            // }
 
 
             //layer.setRadius(radius);
