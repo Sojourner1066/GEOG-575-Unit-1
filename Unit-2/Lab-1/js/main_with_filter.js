@@ -197,7 +197,7 @@ function createSequenceControls(attributes){
                 //Called in both step button and slider event listener handlers
         //Step 9: pass new attribute to update symbols
         updatePropSymbols(attributes[index]);
-        //console.log(attributes[index]);
+        console.log(attributes[index]);
     });
 };
 
@@ -250,8 +250,7 @@ function updatePropSymbols(attribute){
 //Step 2: Import GeoJSON data
 function getData(){
     //load the data
-    //fetch("data/WB_electricity_access.geojson")
-    fetch("data/data.geojson")
+    fetch("data/WB_electricity_access.geojson")
         .then(function(response){
             return response.json();
         })

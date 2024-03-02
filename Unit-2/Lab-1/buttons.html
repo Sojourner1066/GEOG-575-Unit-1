@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Leaflet Layers Control Example</title>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+	   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+<style>
+      html, body,  #map {
+        width : 100%;
+        height : 100%;
+      }
+	  	.box{
+		width:15px;
+		height:15px;
+		border-radius:25px;
+		 display: inline-block;
+		}
+	 
+	.red{
+		background:#FF0000;
+		border: 2px solid #000;
+	} 
+	.green{
+		background:#00CC00;
+		border: 2px solid #000;
+	}
+	  
+</style>
+</head>
+<body>
+
+
+
+<div id="panel">
+<form>
+	<input type="radio" id="radioOne" name="verify" value="N" checked> Verified No &nbsp;<div class="box red" ></div> <br>
+	<input type="radio" id="radioTwo" name="verify" value="Y" > Verified Yes &nbsp;<div class="box green" ></div><br>
+</form><hr>
+
+</div>
+	<div id="map" ></div>
+<script>
+var url = 'CIPts.json';  //REST service
+
+var map = L.map('map').setView([42.736424, -73.762713], 10);  
+
+var osm=new L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png',{ 
+			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'});
+	osm.addTo(map);
+	
+////////////////////	
+var ci_data;
+
+
+//Initial Setup  with layer Verified No
+	ci_data = L.geoJson(null, {
+
+        pointToLayer: function(feature, latlng) {
+
+            return L.circleMarker(latlng, {
+                color:'black',
+                fillColor:  'red',
+                fillOpacity: 1,
+                radius: 8
+            })
+        },  
+		onEachFeature: function (feature, layer) {
+			layer.bindPopup(feature.properties.Verified);
+		},
+        filter: function(feature, layer) {   
+             return (feature.properties.Verified !== "Y" );
+        },
+
+    }); 	
+	
+     $.getJSON(url, function(data) {
+	   ci_data.addData(data);
+    });
+	
+/// END Initial Setup
+
+	//Using a Layer Group to add/ remove data from the map.
+	var myData =  L.layerGroup([]);
+		myData.addLayer(ci_data);
+		myData.addTo(map); 
+		
+		
+	//If Radio Button one is clicked.  
+	document.getElementById("radioOne").addEventListener('click', function(event) {
+	theExpression = 'feature.properties.Verified !== "Y" ';
+	console.log(theExpression);	
+		
+		myData.clearLayers();
+		map.removeLayer(myData);
+		
+		ci_data = L.geoJson(null, {
+
+			pointToLayer: function(feature, latlng) {
+
+				return L.circleMarker(latlng, {
+					color:'black',
+					fillColor:  'red',
+					fillOpacity: 1,
+					radius: 8
+				})
+			},  
+			onEachFeature: function (feature, layer) {
+				layer.bindPopup(feature.properties.Verified);
+			},
+			filter: function(feature, layer) {   
+				 return (feature.properties.Verified !== "Y" );
+			},
+
+		});
+		
+		
+		$.getJSON(url, function(data) {
+			   ci_data.addData(data);
+		});
+
+	    myData.addLayer(ci_data);
+  		myData.addTo(map);;
+    });
+	
+	
+	
+  //If Radio button two is clicked.
+	document.getElementById("radioTwo").addEventListener('click', function(event) {
+	theExpression = 'feature.properties.Verified == "Y" ';	
+	console.log(theExpression);
+		map.removeLayer(myData);
+		myData.clearLayers();
+		
+		ci_data = L.geoJson(null, {
+
+			pointToLayer: function(feature, latlng) {
+
+				return L.circleMarker(latlng, {
+					color:'black',
+					fillColor:  'green',
+					fillOpacity: 1,
+					radius: 8
+				})
+			},  
+			onEachFeature: function (feature, layer) {
+				layer.bindPopup(feature.properties.Verified);
+			},
+			filter: function(feature, layer) {   
+				 return (feature.properties.Verified == "Y" );
+			},
+
+		});
+		
+		$.getJSON(url, function(data) {
+			   ci_data.addData(data);
+		});
+
+	    myData.addLayer(ci_data);
+		myData.addTo(map);
+    });
+	 
+	 
+ </script>
+</body>
+</html>
