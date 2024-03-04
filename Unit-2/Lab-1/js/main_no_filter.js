@@ -18,7 +18,7 @@ function createMap(){
 
     //call getData function
     getData(map);
-}
+};
 
 function calculateMinValue(data){
     //create empty array to store all data values
@@ -44,7 +44,7 @@ function calculateMinValue(data){
     var minValue = Math.min(...allValues)
 
     return minValue;
-};
+}
 
 //calculate the radius of each proportional symbol
 function calcPropRadius(attValue) {
@@ -54,7 +54,6 @@ function calcPropRadius(attValue) {
     var radius = 1.0083 * Math.pow(attValue/minValue,0.5715) * minRadius
     return radius;
 };
-
 
 //function to convert markers to circle markers
 function pointToLayer(feature, latlng, attributes){
@@ -75,10 +74,9 @@ function pointToLayer(feature, latlng, attributes){
     var attValue = Number(feature.properties[attribute]);
 
     //Give each feature's circle marker a radius based on its attribute value
-    var calculatedRadius = calcPropRadius(attValue);
-    
+    options.radius = calcPropRadius(attValue);
     if(attValue==0){
-        options.radius = 1;
+        options.radius = 3;
         options.fillColor = "#7e7e7e";
     } else if(attValue==100){
         options.radius = 3;
@@ -102,7 +100,7 @@ function pointToLayer(feature, latlng, attributes){
     return layer;
 };
 
-function createAttributes(data){
+function processData(data){
     // This function creates an array with all the 'field names'
     // with data about electricity percentages
 
@@ -126,11 +124,28 @@ function createAttributes(data){
     return attributes;
 };
 
+function createPropSymbols(data, attributes){
+    //create a Leaflet GeoJSON layer and add it to the map
+    L.geoJson(data, {
+        pointToLayer: function(feature, latlng){
+            return pointToLayer(feature, latlng, attributes);
+        }
+    }).addTo(map);
+};
+
+//Step 3: Add circle markers for point features to the map
+/*function createPropSymbols(data){
+    L.geoJson(data, {
+        pointToLayer: pointToLayer
+    }).addTo(map);
+};
+*/
+
 //Step 1: Create new sequence controls
 function createSequenceControls(attributes){
     //create range input element (slider)
-    var slider = "<input class='range-slider' type='range'></input><br>";
-    document.querySelector("#overlay").insertAdjacentHTML('beforeend',slider);
+    var slider = "<input class='range-slider' type='range'></input>";
+    document.querySelector("#panel").insertAdjacentHTML('beforeend',slider);
 
      //set slider attributes
      document.querySelector(".range-slider").max = 24;
@@ -139,9 +154,8 @@ function createSequenceControls(attributes){
      document.querySelector(".range-slider").step = 1;
 
     //below Example 3.6...add step buttons
-    document.querySelector('#overlay').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse</button>');
-    
-    document.querySelector('#overlay').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward</button>');
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="reverse">Reverse</button>');
+    document.querySelector('#panel').insertAdjacentHTML('beforeend','<button class="step" id="forward">Forward</button>');
 
     document.querySelector('#reverse').insertAdjacentHTML('beforeend',"<img src='img/noun-arrows-left-712896.svg'>");
     document.querySelector('#forward').insertAdjacentHTML('beforeend',"<img src='img/noun-arrows-right-712895.svg'>");
@@ -168,6 +182,7 @@ function createSequenceControls(attributes){
             //Step 9: pass new attribute to update symbols
             };
             updatePropSymbols(attributes[index]);
+            //console.log(attributes[index]);
             //Step 8: update slider
             document.querySelector('.range-slider').value = index;
         })
@@ -178,11 +193,11 @@ function createSequenceControls(attributes){
         //sequence
         //Step 6: get the new index value
         var index = this.value;
-
-        //Called in both step button and slider event listener handlers
+        //console.log(index);
+                //Called in both step button and slider event listener handlers
         //Step 9: pass new attribute to update symbols
         updatePropSymbols(attributes[index]);
-
+        //console.log(attributes[index]);
     });
 };
 
@@ -204,6 +219,24 @@ function updatePropSymbols(attribute){
                 layer.setRadius(radius);  
                 layer.setStyle({fillColor : "#7900bc"})
             }
+            
+
+            //if(props[attribute]==0){
+            console.log(props[attribute])
+            //}
+
+            // if(radius<3){
+            //     layer.setRadius(3);
+            //     layer.setStyle({fillColor : "#7e7e7e"})
+            // } else {
+            //     layer.setRadius(radius);  
+            //     layer.setStyle({fillColor : "#7900bc"})
+            // }
+
+
+            //layer.setRadius(radius);
+            //layer.feature.properties.
+
             //add formatted attribute to panel content string
             popupContent = "<p><b>Country:</b> " + layer.feature.properties.SOV0NAME + "</p><p><b>" + "Percent of population with access to electricity in " + attribute.slice(2) + ":</b> " + Math.round(layer.feature.properties[attribute] * 100) / 100 + "</p>";
 
@@ -214,77 +247,22 @@ function updatePropSymbols(attribute){
     });
 };
 
-function addDataToMap(data, attributes){
-
-    Africa = L.geoJson(data, { 
-        filter: function(feature, layer) {   
-            return (feature.properties.region === "Africa");
-        },
-        pointToLayer: function(feature, latlng){
-            return pointToLayer(feature, latlng, attributes);
-        }
-    }).addTo(map);
-
-    Europe = L.geoJson(data, { 
-        filter: function(feature, layer) {   
-            return (feature.properties.region === "Europe");
-        },
-        pointToLayer: function(feature, latlng){
-            return pointToLayer(feature, latlng, attributes);
-        }
-    }).addTo(map);
-
-    Asia = L.geoJson(data, { 
-        filter: function(feature, layer) {   
-            return (feature.properties.region === "Asia");
-        },
-       pointToLayer: function(feature, latlng){
-            return pointToLayer(feature, latlng, attributes);
-        }
-   }).addTo(map);
-
-   Oceania = L.geoJson(data, { 
-        filter: function(feature, layer) {   
-            return (feature.properties.region === "Oceania");
-        },
-        pointToLayer: function(feature, latlng){
-            return pointToLayer(feature, latlng, attributes);
-        }
-    }).addTo(map);
-
-   Americas = L.geoJson(data, { 
-        filter: function(feature, layer) {   
-            return (feature.properties.region === "Americas");
-        },
-        pointToLayer: function(feature, latlng){
-            return pointToLayer(feature, latlng, attributes);
-        }
-    }).addTo(map);
-
-    regionLayers = L.layerGroup([Africa, Europe, Oceania, Asia, Americas]).addTo(map);
-    const overlays = {
-        'Africa': Africa,
-        'Europe': Europe,
-        'Asia': Asia,
-        'Oceania': Oceania,
-        'Americas': Americas,
-        'All Regions': regionLayers
-    };
-    
-    const layerControl = L.control.layers(overlays).addTo(map);
-};
-
+//Step 2: Import GeoJSON data
 function getData(){
     //load the data
+    //fetch("data/WB_electricity_access.geojson")
     fetch("data/data.geojson")
         .then(function(response){
             return response.json();
         })
         .then(function(json){
+            //calculate minimum data value
             minValue = calculateMinValue(json);
-            let attributes = createAttributes(json);
-            addDataToMap(json,attributes);
-            createSequenceControls(attributes);           
+            //console.log(minValue)
+            //call function to create proportional symbols
+            let attributes = processData(json);
+            createPropSymbols(json, attributes);
+            createSequenceControls(attributes);
         })
 };
 

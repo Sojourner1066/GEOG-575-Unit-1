@@ -23,6 +23,7 @@ body {
         box-shadow: 1px 1px 1px grey;
         min-height: 200px;
 }
+
 .leaflet-popup-content p {
         margin: 0.2em 0;
 }
