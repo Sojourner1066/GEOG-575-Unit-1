@@ -1,6 +1,13 @@
 //declare map variable globally so all functions have access
 var map;
-var minValue;
+// var Africa;
+// var Europe;
+// var Oceania;
+// var Asia
+// var Americas;
+// var myLayerGroup;
+
+
 
 //step 1 create map
 function createMap(){
@@ -18,68 +25,52 @@ function createMap(){
 
     //call getData function
     getData(map);
-};
+}
+function addDataToMap(data, Africa, Europe, Oceania, Asia, Americas){
 
-
-
-
-
-function filterOnRegion(region_filter){
-    map.removeLayer(layer)
-    if(region_filter === 'Africa'){
-        L.geoJson(data, {
-                 filter: function(feature, layer, region_filter) {   
-                     return (feature.properties.region === "Africa");
-                },
-            
-                pointToLayer: function(feature, latlng){        
-                    return pointToLayer(feature, latlng, attributes);
-                }        
-            }).addTo(map);
-    }
-};
-
-function createPropSymbols(data, attributes, region_filter){
-    //create a Leaflet GeoJSON layer and add it to the map
-    L.geoJson(data, {//region_filter, { 
-    //     filter: function(feature, layer, region_filter) {   
-    //         return (feature.properties.region === "Africa");
-    //    },
-    
-        pointToLayer: function(feature, latlng){        
-            return pointToLayer(feature, latlng, attributes);
-        }        
-    }).addTo(map);
-};
-
-
-function createFeatureGroup(){
-    var Africa = L.geoJson(data, { 
-             filter: function(feature, layer, region_filter) {   
+    Africa = L.geoJson(data, { 
+             filter: function(feature, layer) {   
                  return (feature.properties.region === "Africa");
             },
-    }),
-    var Europe = L.geoJson(data, { 
-        filter: function(feature, layer, region_filter) {   
+    }).addTo(map);
+
+    Europe = L.geoJson(data, { 
+        filter: function(feature, layer) {   
             return (feature.properties.region === "Europe");
         },
-    }),
-       var Asia = L.geoJson(data, { 
-        filter: function(feature, layer, region_filter) {   
+    }).addTo(map);
+
+    Asia = L.geoJson(data, { 
+        filter: function(feature, layer) {   
             return (feature.properties.region === "Asia");
        },
-   }),
-   var Oceania = L.geoJson(data, { 
-    filter: function(feature, layer, region_filter) {   
+   }).addTo(map);
+
+   Oceania = L.geoJson(data, { 
+    filter: function(feature, layer) {   
         return (feature.properties.region === "Oceania");
         },
-    }),
+    }).addTo(map);
 
-   L.featureGroup([Africa, Europe, Asia, Oceania])
-    .bindPopup('Hello world!')
-    .on('click', function() { alert('Clicked on a member of the group!'); })
-    .addTo(map);
+   Americas = L.geoJson(data, { 
+    filter: function(feature, layer) {   
+        return (feature.properties.region === "Americas");
+        },
+    }).addTo(map);
+
+    regionLayers = L.layerGroup([Africa, Europe, Oceania, Asia, Americas]).addTo(map);
+    const overlays = {
+        'Africa': Africa,
+        'Europe': Europe,
+        'Asia': Asia,
+        'Oceania': Oceania,
+        'Americas': Americas,
+        'All Regions': regionLayers
+    };
+    
+    const layerControl = L.control.layers(overlays).addTo(map);
 };
+
 
 
 function getData(){
@@ -89,16 +80,10 @@ function getData(){
             return response.json();
         })
         .then(function(json){
-            createFeatureGroup(json);
-          
-
-            // //calculate minimum data value
-            // minValue = calculateMinValue(json);
-            // //console.log(minValue)
-            // //call function to create proportional symbols
-            // let attributes = processData(json);
-            // createPropSymbols(json, attributes, region_filter);
-            // createSequenceControls(attributes);
+            addDataToMap(json);
+            
+            
+            
         })
 };
 
