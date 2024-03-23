@@ -1,0 +1,29 @@
+/*Add CSS styles here*/
+
+body {
+        margin: 0;
+        padding: 0;
+}
+#map { height: 800px;
+        width: 100%;
+        display: inline-block;
+        /* border: 3px solid; */
+        /* margin:auto; */
+        /* padding: 10px;       */
+        }
+
+#overlay {
+        position: absolute;
+        z-index: 1000;
+        background-color: rgba(255,255,255,0.4);
+        padding: 10px;
+        bottom: 0;
+        margin: 10px;
+        border-radius: 10px;
+        box-shadow: 1px 1px 1px grey;
+        min-height: 200px;
+}
+
+.leaflet-popup-content p {
+        margin: 0.2em 0;
+}
