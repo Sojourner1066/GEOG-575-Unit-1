@@ -1,19 +1,12 @@
 /* Stylesheet by Morgan, 2024 */
-.axis path,
-.axis line {
-    fill: none;
-    stroke: black;
-    stroke-width: 1px;
-    shape-rendering: crispEdges;
+.countries {
+    fill: #FFF;
+    stroke: #CCC;
+    stroke-width: 2px;
 }
 
-.axis text {
-    font-family: sans-serif;
-    font-size: 0.9em;
-}
-
-.title {
-    font-family: sans-serif;
-    font-size: 1.5em;
-    font-weight: bold;
+.states {
+    fill: #FFF;
+    stroke: #6e2e2e;
+    stroke-width: 2px;
 }
