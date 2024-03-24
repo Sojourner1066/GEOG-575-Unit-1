@@ -11,4 +11,13 @@ function setMap(){
                     d3.json("data/NGA_States.topojson")                   
                     ];    
     Promise.all(promises).then(callback);
+
+function callback(data) {
+    var csvData = data[0],
+        region = data[1],
+        states = data[2];
+    console.log(csvData);
+    console.log(region);
+    console.log(states);
+    };
 };
