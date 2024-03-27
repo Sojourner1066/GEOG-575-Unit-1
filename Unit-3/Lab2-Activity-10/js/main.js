@@ -36,7 +36,7 @@ function setMap(){
 
          
     //use Promise.all to parallelize asynchronous data loading
-    var promises = [d3.csv("data/NGA_Poverty_Data.csv"),                    
+    var promises = [d3.csv("data/NGA_Poverty_Data2021.csv"),                    
                     d3.json("data/NGA_Region.topojson"),                    
                     d3.json("data/NGA_States.topojson")                   
                     ];    
@@ -50,6 +50,37 @@ function callback(data) {
     var regionCountries = topojson.feature(region, region.objects.NGA_Region),
         nigerianStates = topojson.feature(states, states.objects.NGA_States);
     
+
+    //variables for data join
+    // var attrArray = ["varA", "varB", "varC", "varD", "varE"];
+   
+    //loop through csv to assign each set of csv attribute values to geojson region
+    for (var i=0; i<csvData.length; i++){
+        var csvRegion = csvData[i]; //the current region
+        var csvKey = csvRegion.Region; //the CSV primary key
+        
+        //loop through geojson regions to find correct region
+        for (var a=0; a<nigerianStates.features.length; a++){
+
+            var geojsonProps = nigerianStates.features[a].properties; //the current region geojson properties
+            var geojsonKey = geojsonProps.State_Name; //the geojson primary key
+
+            //where primary keys match, transfer csv data to geojson properties object
+            if (geojsonKey == csvKey){
+                //console.log(csvRegion);
+                geojsonProps.varA = parseFloat(csvRegion.var_1);
+                geojsonProps.varB = parseFloat(csvRegion.var_2);
+                geojsonProps.varC = parseFloat(csvRegion.var_3);
+                geojsonProps.varD = parseFloat(csvRegion.var_4);
+                geojsonProps.varE = parseFloat(csvRegion.var_5);
+                //assign all attributes and values
+                // attrArray.forEach(function(attr){
+                //     var val = parseFloat(csvRegion[attr]); //get csv attribute value
+                //     geojsonProps[attr] = val; //assign attribute and value to geojson properties
+                // });
+            };
+        };
+    };
 
       //create graticule generator
     var graticule = d3.geoGraticule()
@@ -90,8 +121,8 @@ function callback(data) {
         .attr("d", path);
   
 
-    console.log(csvData);
-    console.log(regionCountries);
+    //console.log(csvData);
+    //console.log(regionCountries);
     console.log(nigerianStates);
 
     };
