@@ -61,17 +61,12 @@
             //join csv data to GeoJSON enumeration units
             nigerianStates = joinData(nigerianStates, csvData);
 
-            var regions = map.selectAll(".regions")
-            .data(nigerianStates.features)
-            .enter()
-            .append("path")
-            .attr("class", function(d){
-                return "region " + d.properties.State_Name;
-            })
-            .attr("d", path);
+
+            //create the color scale
+            var colorScale = makeColorScale(csvData);
 
             //add enumeration units to the map
-            //setEnumerationUnits(nigerianStates, map, path);
+            setEnumerationUnits(nigerianStates, map, path, colorScale);
         };
     }; //end of setMap()
 
@@ -107,22 +102,39 @@
                 //where primary keys match, transfer csv data to geojson properties object
                 if (geojsonKey == csvKey){
                     //console.log(csvRegion);
-                    geojsonProps.varA = parseFloat(csvRegion.var_1);
-                    geojsonProps.varB = parseFloat(csvRegion.var_2);
-                    geojsonProps.varC = parseFloat(csvRegion.var_3);
-                    geojsonProps.varD = parseFloat(csvRegion.var_4);
-                    geojsonProps.varE = parseFloat(csvRegion.var_5);
+                    geojsonProps.varA = parseFloat(csvRegion.varA);
+                    geojsonProps.varB = parseFloat(csvRegion.varB);
+                    geojsonProps.varC = parseFloat(csvRegion.varC);
+                    geojsonProps.varD = parseFloat(csvRegion.varD);
+                    geojsonProps.varE = parseFloat(csvRegion.varE);
                 };
             };
         };
         return nigerianStates;
     };
 
-    function setEnumerationUnits(franceRegions, map, path){
-    
+    function setEnumerationUnits(nigerianStates, map, path, colorScale){
+        var regions = map.selectAll(".regions")
+        .data(nigerianStates.features)
+        .enter()
+        .append("path")
+        .attr("class", function(d){
+            return "region " + d.properties.State_Name;
+        })
+        .attr("d", path)        
+            .style("fill", function(d){           
+                var value = d.properties[expressed];            
+                if(value) {                
+                    return colorScale(d.properties[expressed]);            
+                } else {                
+                    return "#ccc";            
+                }    
+        });
+        //console.log(regions)
+        //console.log(colorScale)
     };
     
-    //function to create color scale generator
+    // Quantiles
     function makeColorScale(data){
         var colorClasses = [
             "#D4B9DA",
@@ -131,22 +143,59 @@
             "#DD1C77",
             "#980043"
         ];
-
+    
         //create color scale generator
         var colorScale = d3.scaleQuantile()
             .range(colorClasses);
-
-        //build array of all values of the expressed attribute
-        var domainArray = [];
-        for (var i=0; i<data.length; i++){
-            var val = parseFloat(data[i][expressed]);
-            domainArray.push(val);
-        };
-
-        //assign array of expressed values as scale domain
-        colorScale.domain(domainArray);
-
+    
+        //build two-value array of minimum and maximum expressed attribute values
+        var minmax = [
+            d3.min(data, function(d) { return parseFloat(d[expressed]); }),
+            d3.max(data, function(d) { return parseFloat(d[expressed]); })
+        ];
+        //assign two-value array as scale domain
+        colorScale.domain(minmax);
+    
         return colorScale;
     };
+
+
+    //Natural Breaks
+    //function to create color scale generator
+    // function makeColorScale(data){
+    //     var colorClasses = [
+    //         "#D4B9DA",
+    //         "#C994C7",
+    //         "#DF65B0",
+    //         "#DD1C77",
+    //         "#980043"
+    //     ];
+
+    //     //create color scale generator
+    //     var colorScale = d3.scaleThreshold()
+    //         .range(colorClasses);
+
+    //     //build array of all values of the expressed attribute
+    //     var domainArray = [];
+    //     for (var i=0; i<data.length; i++){
+    //         var val = parseFloat(data[i][expressed]);
+    //         domainArray.push(val);
+    //     };
+
+    //     //cluster data using ckmeans clustering algorithm to create natural breaks
+    //     var clusters = d3.ckmeans(domainArray, 5);
+    //     //reset domain array to cluster minimums
+    //     domainArray = clusters.map(function(d){
+    //         return d3.min(d);
+    //     });
+    //     //remove first value from domain array to create class breakpoints
+    //     domainArray.shift();
+
+    //     //assign array of last 4 cluster minimums as domain
+    //     colorScale.domain(domainArray);
+
+    //     return colorScale;
+    // };
+
 
 })(); //last line of main.js

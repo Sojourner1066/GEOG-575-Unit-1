@@ -68,11 +68,11 @@ function callback(data) {
             //where primary keys match, transfer csv data to geojson properties object
             if (geojsonKey == csvKey){
                 //console.log(csvRegion);
-                geojsonProps.varA = parseFloat(csvRegion.var_1);
-                geojsonProps.varB = parseFloat(csvRegion.var_2);
-                geojsonProps.varC = parseFloat(csvRegion.var_3);
-                geojsonProps.varD = parseFloat(csvRegion.var_4);
-                geojsonProps.varE = parseFloat(csvRegion.var_5);
+                geojsonProps.varA = parseFloat(csvRegion.varA);
+                geojsonProps.varB = parseFloat(csvRegion.varB);
+                geojsonProps.varC = parseFloat(csvRegion.varC);
+                geojsonProps.varD = parseFloat(csvRegion.varD);
+                geojsonProps.varE = parseFloat(csvRegion.varE);
                 //assign all attributes and values
                 // attrArray.forEach(function(attr){
                 //     var val = parseFloat(csvRegion[attr]); //get csv attribute value
