@@ -166,7 +166,9 @@
         })
         .on("mouseout", function(event, d){
             dehighlight(d);
-        });
+        })
+        .on("mousemove", moveLabel);
+
         var desc = regions.append("desc")
         .text('{"stroke": "#000", "stroke-width": "0.5px"}');;
 
@@ -239,7 +241,8 @@
             })
             .on("mouseout", function(event, d){
                 dehighlightBar(d);
-            });;
+            })
+            .on("mousemove", moveLabel);
         var desc = bars.append("desc")
             .text('{"stroke": "none", "stroke-width": "0px"}');
 
@@ -386,6 +389,8 @@
         var selected = d3.selectAll("." + props.properties.State_Name)
             .style("stroke", "blue")
             .style("stroke-width", "2");
+        
+        setLabel(props.properties);
     };
         
     //function to highlight enumeration units and bars
@@ -394,6 +399,8 @@
         var selected = d3.selectAll("." + props.Region)
             .style("stroke", "blue")
             .style("stroke-width", "2");
+        
+        setLabel(props);
     };
 
     //function to reset the element style on mouseout
@@ -415,6 +422,8 @@
 
             return styleObject[styleName];
         };
+        d3.select(".infolabel")
+            .remove();
     };
 
     //function to reset the element style on mouseout
@@ -436,6 +445,8 @@
 
             return styleObject[styleName];
         };
+        d3.select(".infolabel")
+            .remove();
     };
 
     //function to create dynamic label
@@ -454,6 +465,17 @@
         var regionName = infolabel.append("div")
             .attr("class", "labelname")
             .html(props.name);
+    };
+
+    //function to move info label with mouse
+    function moveLabel(){
+        //use coordinates of mousemove event to set label coordinates
+        var x = event.clientX + 10,
+            y = event.clientY - 75;
+
+        d3.select(".infolabel")
+            .style("left", x + "px")
+            .style("top", y + "px");
     };
 
 })(); //last line of main.js
