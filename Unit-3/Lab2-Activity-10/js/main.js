@@ -15,18 +15,22 @@
     }
     //chart frame dimensions
     var chartWidth = window.innerWidth * 0.425,
-    chartHeight = 473,
-    leftPadding = 25,
-    rightPadding = 2,
-    topBottomPadding = 5,
-    chartInnerWidth = chartWidth - leftPadding - rightPadding,
-    chartInnerHeight = chartHeight - topBottomPadding * 2,
-    translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
+        chartHeight = 473,
+        leftPadding = 25,
+        rightPadding = 2,
+        topBottomPadding = 5,
+        chartInnerWidth = chartWidth - leftPadding - rightPadding,
+        chartInnerHeight = chartHeight - topBottomPadding * 2,
+        translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
 
     //create a scale to size bars proportionally to frame and for axis
+    // var yScale = d3.scaleLinear()
+    //     .range([463, 0])
+    //     .domain([0, 110]);
+    
     var yScale = d3.scaleLinear()
-    .range([463, 0])
-    .domain([0, 110]);
+         .range([chartHeight, 0])
+         .domain([0, 105]);
 
 
 
@@ -220,9 +224,9 @@
             .attr("class", "chart");
 
          //create a scale to size bars proportionally to frame
-        var yScale = d3.scaleLinear()
-            .range([0, chartHeight])
-            .domain([0, 105]);
+        // var yScale = d3.scaleLinear()
+        //     .range([0, chartHeight])
+        //     .domain([0, 105]);
             
         //set bars for each province
         var bars = chart.selectAll(".bars")
