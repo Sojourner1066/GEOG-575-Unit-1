@@ -24,20 +24,59 @@
         translate = "translate(" + leftPadding + "," + topBottomPadding + ")";
 
     //create a scale to size bars proportionally to frame and for axis
+
+    //old code
     // var yScale = d3.scaleLinear()
     //     .range([463, 0])
     //     .domain([0, 110]);
     
+    //old code #2
+    // var yScale = d3.scaleLinear()
+    //      .range([chartHeight, 0])
+    //      .domain([0, 105]);
+
+    //New Code
     var yScale = d3.scaleLinear()
-         .range([chartHeight, 0])
-         .domain([0, 105]);
+        .range([chartHeight, 0]);
 
+    //Making min and max
+    var minValue = d3.min(expressed);
+    var maxValue = d3.max(expressed);
 
+    // Set the domain of the yScale
+    yScale.domain([minValue, maxValue]);
+
+    // Select the HTML element where you want to append your SVG container
+    var container = d3.select("#chart");
+
+    // Define a width variable
+    var width = 800; // or whatever width you want
+
+    // Append an SVG element to your selected HTML element
+    var svg = container.append("svg");
+
+    // Define a height variable
+    var height = 600; // or whatever height you want
+
+    // Set the width and height of your SVG container
+    svg.attr("width", width)
+    .attr("height", height);
+
+    // Assuming svg is your SVG container
+    var bars = svg.selectAll(".bar")
+        .data(expressed)
+        .enter()
+        .append("rect")
+        .attr("class", "bar");
+
+    // Now you can use the bars variable
+    bars.attr("height", function(d) {
+        return yScale(d);
+    });
 
     //begin script when window loads
     window.onload = setMap();
     
-
     //set up choropleth map
     function setMap(){
         //map frame dimensions
